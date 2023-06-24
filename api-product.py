@@ -1,0 +1,44 @@
+import flask
+from flask import request, jsonify
+
+app = flask.Flask(__name__)
+app.config["DEBUG"] = True
+
+
+
+
+@app.route('/', methods=['GET'])
+def home():
+    return '''<h1>API productos</h1>
+<p>Un prototipo de un API para el proyecto de ingenieria de software.</p>'''
+
+
+@app.route('/api/v1/resources/product/all', methods=['GET'])
+def api_all():
+    return jsonify(product)
+
+
+@app.route('/api/v1/resources/product', methods=['GET'])
+def api_id():
+    # Check if an ID was provided as part of the URL.
+    # If ID is provided, assign it to a variable.
+    # If no ID is provided, display an error in the browser.
+    if 'id' in request.args:
+        id = int(request.args['id'])
+    else:
+        return "Error: No id field provided. Please specify an id."
+
+    # Create an empty list for our results
+    results = []
+
+    # Loop through the data and match results that fit the requested ID.
+    # IDs are unique, but other fields might return many results
+    for myproduct in product:
+        if myproduct['id'] == id:
+            results.append(myproduct)
+
+    # Use the jsonify function from Flask to convert our list of
+    # Python dictionaries to the JSON format.
+    return jsonify(results)
+
+app.run()
